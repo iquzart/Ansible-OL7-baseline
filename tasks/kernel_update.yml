@@ -1,0 +1,16 @@
+---
+- name: Kernel Update | Copy rpm file to server
+  copy:  src=files/kernel_rpms/{{ item }} dest=/tmp/
+  with_items:
+      - linux-firmware-20170803-56.git7d2c913d.0.1.el7.noarch.rpm
+      - kernel-uek-firmware-4.1.12-94.3.9.el7uek.noarch.rpm
+      - kernel-uek-4.1.12-94.3.9.el7uek.x86_64.rpm
+  tags: ['kernel', 'init']
+
+- name: Kernel Update | Install package.
+  shell: rpm -Uvh /tmp/{{ item }}
+  with_items:
+      - linux-firmware-20170803-56.git7d2c913d.0.1.el7.noarch.rpm
+      - kernel-uek-firmware-4.1.12-94.3.9.el7uek.noarch.rpm
+      - kernel-uek-4.1.12-94.3.9.el7uek.x86_64.rpm
+  tags: ['kernel', 'init']

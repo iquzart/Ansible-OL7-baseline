@@ -1,0 +1,16 @@
+---
+- name: YUM | install VNC Server packages
+  yum:
+    name: tigervnc-server
+    state: latest
+
+- name: VNC | Configure VNC Service
+  template:
+    src: vncserver@.service.j2
+    dest: /etc/systemd/system/vncserver@.service 
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - vnc
+    - vnc-config

@@ -1,0 +1,52 @@
+---
+
+- name: Set the tier
+  set_fact:
+     tier: "{% if tierv == 'app' %}Application Node{% elif tierv == 'db' %}Database Node{% else %}EBS Tier is not set - skipping user creation{% endif %}"
+  tags: ['tier','tiercheck']
+
+- name: Value Selected
+  debug: var=tier
+  tags: ['tier','tiercheck']
+
+- name: Oracle Users | Creating Oracle users - Database Node
+  user: name={{ item }} shell=/bin/bash groups=dba createhome=yes home=/home/{{ item }} password={{ oracle_os_user_pass }}
+  with_items:
+       - ora{{ env }}
+       - appl{{ env }}
+  when: tier == 'Database Node'
+  tags: ['users','init','tier' ]
+
+
+- name: Oracle Users | Creating Oracle users - Application Node
+  user: name={{ item }} shell=/bin/bash groups=dba createhome=yes home=/home/{{ item }} password={{ oracle_os_user_pass }}
+  with_items:
+       - appl{{ env }}
+  when: tier == 'Application Node'
+  tags: ['users','init','tier' ]
+
+
+- name: Orcale Users | Updating limits.conf with {{ tier }} users
+  shell: sed -i s/{{ item.1 }}/{{ item.2 }}/g  /etc/security/limits.d/oracle-ebs-server-R12-preinstall.conf
+  with_items:
+       -  { 1: "oracle", 2: "ora{{ env }}" }
+       -  { 1: "applmgr", 2: "appl{{ env }}" }
+  when: tier == 'Database Node'
+  tags: ['users','init','tier']
+
+
+- name: Orcale Users | Updating limits.conf with {{ tier }} users
+  shell: sed -i s/{{ item.1 }}/{{ item.2 }}/g  /etc/security/limits.d/oracle-ebs-server-R12-preinstall.conf
+  with_items:
+       -  { 1: "oracle", 2: "appl{{ env }}" }
+  when: tier == 'Application Node'
+  tags: ['users','init','tier']
+
+- name: Orcale Users | Disable login shell for user 'oracle' and 'applmgr'
+  shell: usermod -s /sbin/nologin {{ item }}
+  with_items:
+      - oracle
+      - applmgr
+  tags: ['users','init','tier', 'nologin']
+
+

@@ -1,0 +1,63 @@
+---
+
+
+#- name: Set the tier
+#  set_fact:
+#     tier: "{% if tierv == 'app' %}Application Node{% elif tierv == 'db' %}Database Node{% else %}EBS Tier is not set - skipping user creation{% endif %}"
+#  tags: ['tier','tiercheck']
+
+#- name: Value Selected
+#  debug: var=tier
+#  tags: ['tier','dmz_users']
+
+#- name: Oracle DMZ Users | Creating Oracle users - Database Node
+#  user: name={{ item }} shell=/bin/bash groups=dba createhome=yes home=/home/{{ item }} password={{ oracle_os_user_pass }}
+#  with_items:
+#       - ora{{ env }}
+#       - appl{{ env }}
+#  when: tier == 'Database Node'
+#  tags: ['users','init','tier' ]
+
+
+- name: Oracle DMZ Users | Creating Oracle users - Application Node
+  user: name={{ item }} shell=/bin/bash groups=dba createhome=yes home=/home/{{ item }} password={{ oracle_os_user_pass }}
+  with_items:
+       - appl{{ env }}
+  tags: ['users','init','dmz_users' ]
+
+- name: Orcale DMZ Users | Updating limits.conf with Oracle EBS Application users
+  shell: sed -i s/{{ item.1 }}/{{ item.2 }}/g  /etc/security/limits.d/oracle-ebs-server-R12-preinstall.conf
+  with_items:
+       -  { 1: "oracle", 2: "appl{{ env }}" }
+  tags: ['users','init','dmz_users']
+
+- name: Orcale DMZ Users | Disable login shell for user 'oracle' and 'applmgr'
+  shell: usermod -s /sbin/nologin {{ item }}
+  with_items:
+      - oracle
+      - applmgr
+  tags: ['users','init','dmz_users', 'nologin']
+
+- name: DMZ Users | Creating Admin Groups
+  group:
+    name: '{{ item.name }}'
+    gid: '{{ item.gid }}'
+    state: present
+  with_items:
+      - { name: 'Linux_Admins', gid: '1000' }
+      - { name: 'OracleDB_Admins', gid: '1001' }
+  tags: ['dmz_users', 'dmz_prod']
+
+- name:  DMZ Users | Creating  Admin users
+  user:
+    name: '{{ item.name }}'
+    group: '{{ item.group }}'
+    shell: /bin/bash
+    home: /home/{{ item.name }}
+    state: present
+  with_items:
+      - { name: 'muhammed-ams', group: 'Linux_Admins' }
+      - { name: 'loganathan.m', group: 'Linux_Admins' }
+      - { name: 'samad.abdul',  group: 'OracleDB_Admins' } 
+      - { name: 'rafiuddin.younus', group: 'OracleDB_Admins' }
+  tags: ['dmz_users', 'dmz_prod']

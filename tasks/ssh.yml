@@ -1,0 +1,9 @@
+---
+- name: YUM | Update OpenSSH package 
+  yum:
+    name: openssh
+    state: latest
+  notify: 
+     - restart OL7 sshd
+
+

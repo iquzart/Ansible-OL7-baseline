@@ -1,0 +1,27 @@
+---
+# handlers file for OL7_common
+#
+#
+
+
+- name: Restart journald service
+  service: name=systemd-journald state=restarted
+
+- name: Restart OL7 sshd
+  service: name=sshd state=restarted
+
+- name: Restart chronyd
+  service: name=chronyd state=restarted
+
+- name: Restart auditd
+  service: name=auditd state=restarted
+
+- name: Restart snmpd
+  service: name=snmpd state=restarted
+
+- name: Restart postfix 
+  service: name=postfix state=restarted
+
+
+- name: Restart sssd
+  service: name=sssd state=restarted

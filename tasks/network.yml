@@ -1,0 +1,13 @@
+---
+
+# Virt Configuration
+- name: network | Destroy KVM bridge interface
+  command: virsh net-destroy default
+- name: network | Undefine KVM  bridge interface
+  command: virsh net-undefine default 
+- name: Disbale libvirtd
+  service: name=libvirtd state=stopped enabled=no
+ 
+# disable NetworkManager Service
+#
+

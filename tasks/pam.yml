@@ -1,0 +1,22 @@
+---
+- name: PAM | Configuring passowrd-auth
+  copy: 
+    src: files/pam.d/password-auth 
+    dest: /etc/pam.d/password-auth 
+    owner: root 
+    group: root  
+    mode: 0644 
+    backup: yes 
+  tags: ['pam', 'init']
+
+
+- name: PAM | Configuring system-auth
+  copy:
+    src: files/pam.d/system-auth
+    dest: /etc/pam.d/system-auth
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  tags: ['pam', 'init']
+

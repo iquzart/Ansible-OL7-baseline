@@ -1,0 +1,24 @@
+---
+
+- name: SNMP | Install snmp packages
+  yum:
+    name: net-snmp
+    state: latest
+  tags: ['snmp', 'init']
+
+- name: SNMP | Enabling the service on boot 
+  service:
+    name: snmpd
+    state: started
+    enabled: yes
+  tags: ['snmp', 'init']
+
+- name: SNMP | Configuring SNMP to allow access from OpManager
+  template:
+    src: snmpd.conf.j2
+    dest: /etc/snmp/snmpd.conf 
+    mode: 0640
+  tags: ['snmp', 'init']
+  notify:
+    - Restart snmpd
+

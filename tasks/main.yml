@@ -1,0 +1,34 @@
+---
+# tasks file for OL7_common
+#
+#
+#
+#
+
+
+
+- include: kernel_update.yml
+- include: hostname.yml
+- include: selinux.yml
+- include: firewalld.yml
+- include: logs.yml
+- include: network.yml
+#- include: vnc.yml
+#- include: ebs_pre_reqs.yml
+- include: ntp.yml
+- include: authconfig-ad.yml
+# when: not dmz_node
+
+- include: sudo.yml
+- include: auditd.yml
+#- include: snmp.yml
+- include: mta.yml
+  when: not dmz_node 
+- include: dmz_users.yml
+  when: dmz_node
+- include: oracle_users.yml
+  when: not dmz_node
+- include: test.yml
+#  when: env!='dmz'
+#- include: ssh.yml
+- include: pam.yml

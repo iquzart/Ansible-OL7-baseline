@@ -1,0 +1,21 @@
+---
+- name: sudo | Configure sudo access for System admins and EBS/DB admins
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers
+    owner: root
+    group: root
+    mode: 0644
+  when: not dmz_node
+  tags: ['sudo', 'init']
+
+- name: DMZ sudo | Configure sudo access for System admins and EBS/DB admins
+  template:
+    src: sudoers.dmz.j2
+    dest: /etc/sudoers
+    owner: root
+    group: root
+    mode: 0644
+  when: dmz_node
+  tags: ['sudo', 'init']
+

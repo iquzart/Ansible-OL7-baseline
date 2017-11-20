@@ -1,0 +1,25 @@
+---
+# vars file for OL7_common
+#
+#
+#
+
+hostname: mynewhostname
+selinux_state: disabled
+ntp_server: x.x.x.x   
+vnc_user: vncuser #VNC Service Username
+realm_domain: mytestdomain #Domain name
+krb5_domain: MYTESTDOMAIN #realm_domain in caps
+realmd_username: admin@mydomain.com #admin username
+realmd_password: #admin user password
+OpManager_IP: x.x.x.x 
+snmp_string: xxxxxxxxxxxx
+smtp_relay_host: smtp.mytestdomain.test
+admin_mail_id: admin@mail.com
+oracle_os_user_pass: #python -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mksalt(crypt.METHOD_SHA512)))' 
+env: prod  #prod #uat #dev
+tierv: app #db or app  
+dmz_node: true #true or false 
+   
+
+ 

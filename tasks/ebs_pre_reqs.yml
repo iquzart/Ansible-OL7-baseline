@@ -1,0 +1,25 @@
+---
+#- name: Enable ol7_addons repo
+#  ini_file:
+#    dest: /etc/yum.repos.d/public-yum-ol7.repo
+#    section: ol7_addons 
+#    option: enabled
+#    value: 1
+#  tags: ['yum', 'addons']
+
+- name: Install E-Business Suite pre-install package from ol7_addons repo
+  yum:
+    name: oracle-ebs-server-R12-preinstall
+    enablerepo: ol7_addons
+    state: present
+  tags: ebs-pre
+
+- name: EBS Pre Reqs | Link to Berkeley DB library for HTTP server
+  file:
+    src: /usr/lib/libdb-4.7.so
+    dest: /usr/lib/libdb-4.3.so
+    state: link
+    owner: root
+    group: root
+    mode: 0644
+  tags: ['ebs-pre', 'Link_DB_library']
