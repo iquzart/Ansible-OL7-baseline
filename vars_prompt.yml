@@ -1,0 +1,34 @@
+---
+- hosts: localhost
+  remote_user: root
+
+#  vars:
+#    from: "camelot"
+
+  vars_prompt:
+    - name: "hostname"
+      prompt: "what is the host name"
+      private: no
+    - name: "env"
+      prompt: "Oracle EBS instance stage - [dev, prod, uat, prodsup]"
+      private: no
+    - name: "tier"
+      prompt: "Oracle EBS Tier - [app,db]"
+      private: no
+
+  tasks:
+    - name: Pre-Flight Check
+      debug:
+        msg:
+          - "The hostname: {{hostname}}"
+          - "The Environment Seleted: {{env}}"
+          - "Oracle EBS Tier: {{tier}}"
+~
+~
+~
+~
+~
+~
+~
+~
+~
